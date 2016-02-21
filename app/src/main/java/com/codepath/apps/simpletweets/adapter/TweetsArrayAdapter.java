@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletweets;
+package com.codepath.apps.simpletweets.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.util.CustomStyle;
 import com.squareup.picasso.Picasso;
@@ -64,7 +65,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
   static class ViewHolder {
     @Bind(R.id.ivProfileImage)
     ImageView ivProfileImage;
-    @Bind(R.id.tvUseName)
+    @Bind(R.id.tvUserName)
     TextView tvUserName;
     @Bind(R.id.tvScreenName)
     TextView tvScreenName;

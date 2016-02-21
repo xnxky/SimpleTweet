@@ -1,4 +1,4 @@
-package com.codepath.apps.simpletweets;
+package com.codepath.apps.simpletweets.twitter;
 
 import android.content.Context;
 
@@ -64,7 +64,7 @@ public class TwitterClient extends OAuthBaseClient {
 
   public void postTweet(
       String tweetBody,
-      int in_reply_to_status_id,
+      long in_reply_to_status_id,
       AsyncHttpResponseHandler handler
   ) {
     String url = getApiUrl("statuses/update.json");
