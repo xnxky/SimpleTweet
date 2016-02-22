@@ -5,9 +5,8 @@
         android:id="@+id/action_tweet"
         android:icon="@drawable/action_tweet"
         android:orderInCategory="100"
-        app:showAsAction="always"
-        android:title="" />
-
+        android:title=""
+        app:showAsAction="always"/>
 
 
 </menu>

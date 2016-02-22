@@ -1,6 +1,12 @@
 package com.codepath.apps.simpletweets.models;
 
 import android.text.format.DateUtils;
+import android.util.Log;
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,18 +21,46 @@ import java.util.Locale;
 /**
  * Created by xiangyang_xiao on 2/17/16.
  */
-public class Tweet implements Serializable {
+@Table(name = "tweets")
+public class Tweet
+    extends Model
+    implements Serializable {
 
+  private static long maxId = -1;
+  @Column(name = "body")
   private String body;
+  @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
   private long uid;
+  @Column(name = "user", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
   private User user;
+  @Column(name = "created_at")
   private String createdAt;
+  @Column(name = "retweet_count")
+  private int retweetCount;
+  @Column(name = "retweeted")
+  private boolean retweeted;
+  @Column(name = "favourite_count")
+  private int favouriteCount;
+  @Column(name = "favorited")
+  private boolean favorited;
+  @Column(name = "orig_tweet", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+  private Tweet origTweet;
+  @Column(name = "image_url")
+  private String imageUrl;
+  @Column(name = "video_url")
+  private String videoUrl;
+
+  public Tweet() {
+    super();
+  }
 
   public static long getMaxId() {
     return maxId;
   }
 
-  private static long maxId = -1;
+  public static void setMaxId(long maxId) {
+    Tweet.maxId = maxId;
+  }
 
   public static String fromRawTweetDate(String tweetDate) {
     String tweetDateFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
@@ -46,20 +80,82 @@ public class Tweet implements Serializable {
     return relativeDate;
   }
 
-  public static Tweet fromJson(JSONObject jsonObject) {
-    Tweet tweet = new Tweet();
+  public static Tweet fromJson(JSONObject jsonObject, boolean saveFlag) {
+    if(jsonObject.toString().contains("mp4")) {
+      Log.i("XXY", "get right mp4");
+    }
     try {
+      Tweet existingTweet = new Select()
+          .from(Tweet.class)
+          .where("uid = ?", jsonObject.getLong("id"))
+          .executeSingle();
+      if (existingTweet != null) {
+        if (maxId < 0 || maxId > existingTweet.uid) {
+          maxId = existingTweet.uid;
+        }
+        return existingTweet;
+      }
+
+      Tweet tweet = new Tweet();
       tweet.body = jsonObject.getString("text");
       tweet.uid = jsonObject.getLong("id");
       tweet.createdAt = fromRawTweetDate(jsonObject.getString("created_at")).replaceAll("^in ", "");
       tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
-      if(maxId < 0 || maxId > tweet.uid) {
+      tweet.retweetCount = jsonObject.getInt("retweet_count");
+      tweet.retweeted = jsonObject.getBoolean("retweeted");
+      tweet.favouriteCount = jsonObject.getInt("favorite_count");
+      tweet.favorited = jsonObject.getBoolean("favorited");
+
+      try {
+        tweet.origTweet = Tweet.fromJson(jsonObject.getJSONObject("retweeted_status"));
+      } catch (JSONException e) {
+        tweet.origTweet = null;
+      }
+
+      try {
+        JSONObject entities = jsonObject.getJSONObject("entities");
+        JSONArray media = entities.getJSONArray("media");
+        if (media.length() > 0) {
+          tweet.imageUrl = ((JSONObject) media.get(0)).getString("media_url");
+        }
+      } catch (JSONException e) {
+        Log.e("ImageNotExist", e.getMessage());
+      }
+
+      try {
+        JSONObject entities = jsonObject.getJSONObject("extended_entities");
+        JSONArray media = entities.getJSONArray("media");
+        if(media.length() > 0) {
+          JSONObject mediaJsonObject = (JSONObject) media.get(0);
+          JSONObject videoInfo = mediaJsonObject.getJSONObject("video_info");
+          JSONArray variants =  videoInfo.getJSONArray("variants");
+          for(int i=0; i<variants.length(); i++) {
+            JSONObject content = (JSONObject)variants.get(i);
+            if(content.getString("content_type").equals("video/mp4")) {
+              tweet.videoUrl = content.getString("url");
+              break;
+            }
+          }
+        }
+      } catch (JSONException e) {
+        Log.e("VideoNotExist", e.getMessage());
+      }
+
+      if (maxId < 0 || maxId > tweet.uid) {
         maxId = tweet.uid;
       }
+      if (saveFlag) {
+        tweet.save();
+      }
+      return tweet;
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    return tweet;
+    return null;
+  }
+
+  public static Tweet fromJson(JSONObject jsonObject) {
+    return fromJson(jsonObject, true);
   }
 
   public static ArrayList<Tweet> fromJSONArray(JSONArray response) {
@@ -76,6 +172,14 @@ public class Tweet implements Serializable {
       }
     }
     return tweets;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public String getVideoUrl() {
+    return videoUrl;
   }
 
   public String getCreatedAt() {

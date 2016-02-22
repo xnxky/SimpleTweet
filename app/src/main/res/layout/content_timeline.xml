@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/srlHomelineContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.codepath.apps.simpletweets.TimelineActivity"
+    tools:context=".activity.TimelineActivity"
     tools:showIn="@layout/activity_timeline">
 
     <ListView
@@ -19,4 +20,16 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"/>
-</RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/float_compose"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|end"
+        app:fabSize="normal"
+        app:layout_anchor="@id/lvTweets"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</android.support.v4.widget.SwipeRefreshLayout>
