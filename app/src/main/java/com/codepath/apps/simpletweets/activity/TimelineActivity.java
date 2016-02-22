@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,13 +18,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.codepath.apps.simpletweets.DialogFragment.TweetDialogFragment;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.adapter.TweetsArrayAdapter;
-import com.codepath.apps.simpletweets.twitter.TwitterApp;
-import com.codepath.apps.simpletweets.twitter.TwitterClient;
 import com.codepath.apps.simpletweets.listener.EndlessScrollListener;
+import com.codepath.apps.simpletweets.listener.TweetSavedListener;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.models.User;
+import com.codepath.apps.simpletweets.twitter.TwitterApp;
+import com.codepath.apps.simpletweets.twitter.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -71,7 +74,7 @@ public class TimelineActivity extends AppCompatActivity {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(getApplicationContext(), TweetDetailActivity.class);
-            intent.putExtra("tweet", (Tweet)lvTweets.getItemAtPosition(position));
+            intent.putExtra("tweet", (Tweet) lvTweets.getItemAtPosition(position));
             startActivityForResult(intent, REQUEST_CODE);
           }
         }
@@ -177,9 +180,18 @@ public class TimelineActivity extends AppCompatActivity {
   }
 
   private void startTweet() {
+    /*
     Intent intent = new Intent(this, TweetActivity.class);
     intent.putExtra("user", curUser);
     startActivityForResult(intent, REQUEST_CODE);
+    */
+
+    TweetSavedListener listener =
+        new TweetSavedListener(curUser, -1, null, getApplicationContext(), aTweets);
+    TweetDialogFragment dialogFragment =
+        TweetDialogFragment.newInstance(listener);
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    dialogFragment.show(fragmentManager, "compose");
   }
 
   @Override

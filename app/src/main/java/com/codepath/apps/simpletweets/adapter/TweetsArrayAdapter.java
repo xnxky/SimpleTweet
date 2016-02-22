@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.util.CustomStyle;
+import com.codepath.apps.simpletweets.util.LinkifiedTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         black
     );
     viewHolder.tvUserName.setText(nameText);
-    String screenName = "@"+tweet.getUser().getScreenName();
+    String screenName = "@" + tweet.getUser().getScreenName();
     viewHolder.tvScreenName.setText(screenName);
     viewHolder.tvTime.setText(tweet.getCreatedAt());
     viewHolder.tvBody.setText(tweet.getBody());
@@ -70,7 +71,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     @Bind(R.id.tvScreenName)
     TextView tvScreenName;
     @Bind(R.id.tvBody)
-    TextView tvBody;
+    LinkifiedTextView tvBody;
     @Bind(R.id.tvTime)
     TextView tvTime;
 

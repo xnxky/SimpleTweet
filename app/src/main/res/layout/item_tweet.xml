@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
                 android:padding="10dp">
 
     <ImageView
@@ -32,7 +33,7 @@
         android:layout_toRightOf="@+id/ivProfileImage"
         android:text="New Text"/>
 
-    <TextView
+    <com.codepath.apps.simpletweets.util.LinkifiedTextView
         android:id="@+id/tvBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

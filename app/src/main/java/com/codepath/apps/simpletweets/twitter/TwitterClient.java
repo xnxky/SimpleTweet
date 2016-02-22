@@ -47,8 +47,8 @@ public class TwitterClient extends OAuthBaseClient {
     String url = getApiUrl("statuses/home_timeline.json");
     RequestParams params = new RequestParams();
     params.put("count", COUNT_PER_FETCH);
-    if(Tweet.getMaxId() > 1) {
-      params.put("max_id", Tweet.getMaxId()-1);
+    if (Tweet.getMaxId() > 1) {
+      params.put("max_id", Tweet.getMaxId() - 1);
     }
     getClient().get(url, params, handler);
   }
@@ -70,7 +70,7 @@ public class TwitterClient extends OAuthBaseClient {
     String url = getApiUrl("statuses/update.json");
     RequestParams params = new RequestParams();
     params.put("status", tweetBody);
-    if(in_reply_to_status_id > 0) {
+    if (in_reply_to_status_id > 0) {
       params.put("in_reply_to_status_id", in_reply_to_status_id);
     }
     getClient().post(url, params, handler);

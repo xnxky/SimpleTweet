@@ -38,5 +38,7 @@ dependencies {
   compile 'com.jakewharton:butterknife:7.0.1'
   compile 'joda-time:joda-time:2.9.1'
   compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
-  compile 'com.yqritc:android-scalablevideoview:1.0.3'
+  //can not make it work
+  compile 'com.github.danylovolokh:video-player-manager:0.2.0'
 }
+

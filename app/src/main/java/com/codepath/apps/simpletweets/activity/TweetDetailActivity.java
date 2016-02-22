@@ -1,5 +1,6 @@
 package com.codepath.apps.simpletweets.activity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,14 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.twitter.TwitterReply;
 import com.squareup.picasso.Picasso;
-import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,7 +36,8 @@ public class TweetDetailActivity extends AppCompatActivity {
   @Bind(R.id.ivBody)
   ImageView ivBody;
   @Bind(R.id.vvBody)
-  ScalableVideoView vvBody;
+  VideoView vvBody;
+
   @Bind(R.id.etReply)
   EditText etReply;
   @Bind(R.id.tvLeftCharCount)
@@ -58,7 +61,7 @@ public class TweetDetailActivity extends AppCompatActivity {
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     toolbar.setLogo(R.drawable.action_logo);
-    tweet = (Tweet)getIntent().getSerializableExtra("tweet");
+    tweet = (Tweet) getIntent().getSerializableExtra("tweet");
     replyId = tweet.getUid();
     author = tweet.getUser().getName();
     etBottomParams = new RelativeLayout.LayoutParams(etReply.getLayoutParams());
@@ -74,7 +77,7 @@ public class TweetDetailActivity extends AppCompatActivity {
         .into(ivProfileImage);
 
     tvUserName.setText(tweet.getUser().getName());
-    String screenName = "@"+tweet.getUser().getScreenName();
+    String screenName = "@" + tweet.getUser().getScreenName();
     tvScreenName.setText(screenName);
     tvBody.setText(tweet.getBody());
     btnTweet.setVisibility(View.GONE);
@@ -112,8 +115,73 @@ public class TweetDetailActivity extends AppCompatActivity {
         btnTweet,
         replyId,
         author,
-        this
+        this,
+        null
+    );
+
+    if (tweet.getImageUrl() != null) {
+      ivBody.setVisibility(View.VISIBLE);
+      Picasso.with(this)
+          .load(tweet.getImageUrl())
+          .into(ivBody);
+    } else {
+      ivBody.setVisibility(View.GONE);
+      ivBody.setImageDrawable(null);
+    }
+
+    if (tweet.getVideoUrl() != null) {
+      vvBody.setVideoPath(tweet.getVideoUrl());
+      MediaController mediaController = new MediaController(this);
+      mediaController.setAnchorView(vvBody);
+      vvBody.setMediaController(mediaController);
+      vvBody.requestFocus();
+      vvBody.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        // Close the progress bar and play the video
+        public void onPrepared(MediaPlayer mp) {
+          vvBody.start();
+        }
+      });
+    } else {
+      vvBody.setVisibility(View.GONE);
+    }
+  }
+
+  /*
+  TODO : to make the lib work
+  private void setupVideoView() {
+    vvBody.addMediaPlayerListener(
+        new SimpleMainThreadMediaPlayerListener() {
+          @Override
+          public void onVideoPreparedMainThread() {
+            // We hide the cover when video is prepared. Playback is about to start
+            vvCover.setVisibility(View.INVISIBLE);
+          }
+
+          @Override
+          public void onVideoStoppedMainThread() {
+            // We show the cover when video is stopped
+            vvCover.setVisibility(View.VISIBLE);
+          }
+
+          @Override
+          public void onVideoCompletionMainThread() {
+            // We show the cover when video is completed
+            vvCover.setVisibility(View.VISIBLE);
+          }
+        }
+    );
+    vvCover.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            mVideoPlayerManager.playNewVideo(
+                null, vvBody, "https://www.youtube.com/watch?feature=player_embedded&v=w9j3-ghRjBs"
+                //null, vvBody, tweet.getVideoUrl()
+            );
+          }
+        }
     );
   }
+   */
 
 }

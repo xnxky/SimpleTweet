@@ -14,18 +14,18 @@ import java.io.Serializable;
  * Created by xiangyang_xiao on 2/17/16.
  */
 
-@Table(name="users")
+@Table(name = "users")
 public class User
     extends Model
     implements Serializable {
 
-  @Column(name="name")
+  @Column(name = "name")
   private String name;
-  @Column(name="uid", unique = true)
+  @Column(name = "uid", unique = true)
   private long uid;
-  @Column(name="screen_name")
+  @Column(name = "screen_name")
   private String screenName;
-  @Column(name="profile_url")
+  @Column(name = "profile_url")
   private String profileImageUrl;
 
   public User() {
@@ -38,7 +38,7 @@ public class User
           .from(User.class)
           .where("uid = ?", json.getLong("id"))
           .executeSingle();
-      if(existingUser != null) {
+      if (existingUser != null) {
         return existingUser;
       }
       User user = new User();

@@ -1,6 +1,7 @@
 package com.codepath.apps.simpletweets.twitter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.apps.simpletweets.R;
+import com.codepath.apps.simpletweets.listener.TweetSavedListener;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -25,18 +27,19 @@ public class TwitterReply {
 
   final static private TwitterClient client = TwitterApp.getRestClient();
 
-  public static void SetTwitterReply (
+  public static void SetTwitterReply(
       final EditText etTweet,
       final TextView tvLeftCharCount,
       final Button btnTweet,
       final long replyId,
       final String author,
-      final Activity activity
+      final Context activity,
+      final TweetSavedListener listener
   ) {
 
     final Resources resources = activity.getResources();
     final int initTotalCount = resources.getInteger(R.integer.init_char_count);
-        etTweet.addTextChangedListener(
+    etTweet.addTextChangedListener(
         new TextWatcher() {
           @Override
           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,9 +80,9 @@ public class TwitterReply {
                   Toast.LENGTH_SHORT
               ).show();
             } else {
-              String prefix = replyId < 0 ? "" : "@"+author;
+              String prefix = replyId < 0 ? "" : "@" + author;
               client.postTweet(
-                  prefix+etTweet.getText().toString(),
+                  prefix + "    " + etTweet.getText().toString(),
                   replyId,
                   new JsonHttpResponseHandler() {
                     @Override
@@ -90,10 +93,14 @@ public class TwitterReply {
                           Toast.LENGTH_SHORT
                       ).show();
                       Tweet newTweet = Tweet.fromJson(response);
-                      Intent intent = new Intent();
-                      intent.putExtra("tweet", newTweet);
-                      activity.setResult(Activity.RESULT_OK, intent);
-                      activity.finish();
+                      if(listener == null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("tweet", newTweet);
+                        ((Activity)activity).setResult(Activity.RESULT_OK, intent);
+                        ((Activity)activity).finish();
+                      } else {
+                        listener.finish(newTweet);
+                      }
                     }
 
                     @Override

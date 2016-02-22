@@ -56,7 +56,7 @@
         </activity>
         <activity
             android:name=".activity.TweetDetailActivity"
-            android:label="@string/title_activity_tweet_detail"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

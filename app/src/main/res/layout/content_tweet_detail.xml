@@ -14,8 +14,8 @@
     tools:showIn="@layout/activity_tweet_detail">
 
     <TextView
-        android:layout_width="100dp"
-        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvRetweet"
         android:visibility="gone"
@@ -24,8 +24,8 @@
         android:layout_alignParentStart="true"/>
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/profile_image_width"
+        android:layout_height="@dimen/profile_image_height"
         android:id="@+id/ivProfileImage"
         android:layout_below="@id/tvRetweet"
         android:layout_alignParentLeft="true"
@@ -37,7 +37,10 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvUserName"
+        android:textSize="@dimen/regualr_text_size"
         android:textStyle="bold"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/tvRetweet"
         android:layout_alignTop="@id/ivProfileImage"
         android:layout_toRightOf="@+id/ivProfileImage"
@@ -48,36 +51,50 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvScreenName"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/component_vertical_margin"
         android:layout_below="@+id/tvUserName"
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage"/>
 
+    <View
+        android:id="@+id/upPartDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/ivProfileImage"
+        android:layout_marginTop="@dimen/component_vertical_margin"
+        android:background="@android:color/darker_gray"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text=""
         android:id="@+id/tvBody"
-        android:layout_below="@+id/ivProfileImage"
+        android:layout_below="@+id/upPartDivider"
+        android:layout_marginTop="@dimen/component_vertical_margin"
         android:layout_alignParentLeft="true"
+        android:autoLink="all"
+        android:linksClickable="true"
         android:layout_alignParentStart="true"/>
 
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/ivBody"
-        android:visibility="gone"
-        android:layout_below="@id/ivProfileImage"
+        android:layout_marginTop="@dimen/component_vertical_margin"
+        android:layout_below="@id/tvBody"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
-    <com.yqritc.scalablevideoview.ScalableVideoView
+    <VideoView
         android:id="@+id/vvBody"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
+        android:layout_width="320dp"
+        android:layout_height="240dp"
+        android:layout_marginTop="@dimen/component_vertical_margin"
         android:layout_below="@id/ivBody"
-        android:layout_marginBottom="100dp"
-        app:scalableType="fitCenter"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -86,7 +103,6 @@
         android:background="@color/colorPrimary"
         android:text="@string/button_tweet_text"
         android:textSize="@dimen/button_text_size"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
@@ -94,20 +110,23 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/tvLeftCharCount"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/btnTweet"
-        android:layout_toEndOf="@id/btnTweet"
-        android:layout_marginLeft="60dp"
-        android:layout_marginStart="60dp"/>
+        android:layout_alignBottom="@id/btnTweet"
+        android:layout_alignTop="@id/btnTweet"
+        android:layout_marginEnd="@dimen/component_vertical_margin"
+        android:layout_marginRight="@dimen/component_vertical_margin"
+        android:layout_toLeftOf="@+id/btnTweet"
+        android:layout_toStartOf="@+id/btnTweet"
+        android:gravity="center_vertical"
+        android:text="@integer/init_char_count"
+        android:textSize="@dimen/char_count_text_size"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ivCancel"
         android:src="@drawable/image_cancel"
+        android:foregroundGravity="center_vertical"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
@@ -118,6 +137,8 @@
         android:text=""
         android:id="@+id/etReply"
         android:hint="@string/reply_to_tweet"
+        android:layout_above="@id/btnTweet"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
