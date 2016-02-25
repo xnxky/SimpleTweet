@@ -8,6 +8,8 @@
     <string name="init_tweet_hint">Tweet Here !!!</string>
     <string name="title_activity_tweet_detail">TweetDetailActivity</string>
     <string name="reply_to_tweet">Reply to the tweet</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="progress_bar">Loading...</string>
 
 
 </resources>

@@ -15,6 +15,7 @@ import android.widget.VideoView;
 
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.models.User;
 import com.codepath.apps.simpletweets.twitter.TwitterReply;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +50,7 @@ public class TweetDetailActivity extends AppCompatActivity {
 
   private Tweet tweet;
   private long replyId;
-  private String author;
+  private User author;
   private RelativeLayout.LayoutParams etBottomParams;
   private RelativeLayout.LayoutParams etAboveParams;
 
@@ -63,7 +64,7 @@ public class TweetDetailActivity extends AppCompatActivity {
     toolbar.setLogo(R.drawable.action_logo);
     tweet = (Tweet) getIntent().getSerializableExtra("tweet");
     replyId = tweet.getUid();
-    author = tweet.getUser().getName();
+    author = tweet.getUser();
     etBottomParams = new RelativeLayout.LayoutParams(etReply.getLayoutParams());
     etBottomParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
     etAboveParams = new RelativeLayout.LayoutParams(etReply.getLayoutParams());
@@ -74,6 +75,9 @@ public class TweetDetailActivity extends AppCompatActivity {
   private void setupView() {
     Picasso.with(this)
         .load(tweet.getUser().getProfileImageUrl())
+        .fit()
+        .error(R.drawable.placeholder_error)
+        .placeholder(R.drawable.placeholder)
         .into(ivProfileImage);
 
     tvUserName.setText(tweet.getUser().getName());
@@ -85,10 +89,37 @@ public class TweetDetailActivity extends AppCompatActivity {
     tvLeftCharCount.setVisibility(View.GONE);
     etReply.setLayoutParams(etBottomParams);
 
+    final String initEditText = author.getPrefixName();
+    etReply.setOnFocusChangeListener(
+        new View.OnFocusChangeListener() {
+          @Override
+          public void onFocusChange(View v, boolean hasFocus) {
+            if(hasFocus) {
+              if(etReply.getText().toString().equals("")) {
+                etReply.setText(initEditText);
+              }
+              etReply.requestFocus();
+              etReply.setSelection(etReply.getText().length());
+              tvLeftCharCount.setVisibility(View.VISIBLE);
+              btnTweet.setVisibility(View.VISIBLE);
+              ivCancel.setVisibility(View.VISIBLE);
+              etReply.setLayoutParams(etAboveParams);
+            }
+            else {
+            etReply.setText("");
+            etReply.clearFocus();
+          }
+          }
+        }
+    );
+    /*
     etReply.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            String prefix = replyId < 0 ? "" : author.getPrefixName();
+            etReply.setText(prefix);
+            etReply.setSelection(etReply.getText().length());
             tvLeftCharCount.setVisibility(View.VISIBLE);
             btnTweet.setVisibility(View.VISIBLE);
             ivCancel.setVisibility(View.VISIBLE);
@@ -96,6 +127,7 @@ public class TweetDetailActivity extends AppCompatActivity {
           }
         }
     );
+    */
     ivCancel.setOnClickListener(
         new View.OnClickListener() {
           @Override
@@ -109,12 +141,12 @@ public class TweetDetailActivity extends AppCompatActivity {
           }
         }
     );
+
     TwitterReply.SetTwitterReply(
         etReply,
         tvLeftCharCount,
         btnTweet,
         replyId,
-        author,
         this,
         null
     );
@@ -123,6 +155,9 @@ public class TweetDetailActivity extends AppCompatActivity {
       ivBody.setVisibility(View.VISIBLE);
       Picasso.with(this)
           .load(tweet.getImageUrl())
+          .fit()
+          .error(R.drawable.placeholder_error)
+          .placeholder(R.drawable.placeholder)
           .into(ivBody);
     } else {
       ivBody.setVisibility(View.GONE);
@@ -141,6 +176,7 @@ public class TweetDetailActivity extends AppCompatActivity {
           vvBody.start();
         }
       });
+      ivBody.setVisibility(View.GONE);
     } else {
       vvBody.setVisibility(View.GONE);
     }

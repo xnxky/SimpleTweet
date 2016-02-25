@@ -10,6 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".activity.TweetDetailActivity"
     tools:showIn="@layout/activity_tweet_detail">
 
@@ -75,24 +77,27 @@
         android:layout_marginTop="@dimen/component_vertical_margin"
         android:layout_alignParentLeft="true"
         android:autoLink="all"
+        android:layout_above="@id/etTweet"
         android:linksClickable="true"
         android:layout_alignParentStart="true"/>
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tweet_image_height"
         android:id="@+id/ivBody"
         android:layout_marginTop="@dimen/component_vertical_margin"
         android:layout_below="@id/tvBody"
+        android:layout_above="@id/etTweet"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
     <VideoView
         android:id="@+id/vvBody"
-        android:layout_width="320dp"
-        android:layout_height="240dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tweet_image_height"
         android:layout_marginTop="@dimen/component_vertical_margin"
         android:layout_below="@id/ivBody"
+        android:layout_above="@id/etTweet"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 

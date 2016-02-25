@@ -15,4 +15,6 @@
     <dimen name="char_count_text_size">25sp</dimen>
     <dimen name="tweet_text_size">25sp</dimen>
 
+    <dimen name="tweet_image_height">270dp</dimen>
+
 </resources>

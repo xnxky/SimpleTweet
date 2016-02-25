@@ -99,7 +99,7 @@ public class Tweet
       Tweet tweet = new Tweet();
       tweet.body = jsonObject.getString("text");
       tweet.uid = jsonObject.getLong("id");
-      tweet.createdAt = fromRawTweetDate(jsonObject.getString("created_at")).replaceAll("^in ", "");
+      tweet.createdAt = jsonObject.getString("created_at");
       tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
       tweet.retweetCount = jsonObject.getInt("retweet_count");
       tweet.retweeted = jsonObject.getBoolean("retweeted");
@@ -119,7 +119,7 @@ public class Tweet
           tweet.imageUrl = ((JSONObject) media.get(0)).getString("media_url");
         }
       } catch (JSONException e) {
-        Log.e("ImageNotExist", e.getMessage());
+        tweet.imageUrl = null;
       }
 
       try {
@@ -138,7 +138,7 @@ public class Tweet
           }
         }
       } catch (JSONException e) {
-        Log.e("VideoNotExist", e.getMessage());
+        tweet.videoUrl = null;
       }
 
       if (maxId < 0 || maxId > tweet.uid) {
@@ -183,7 +183,7 @@ public class Tweet
   }
 
   public String getCreatedAt() {
-    return createdAt;
+    return fromRawTweetDate(createdAt).replaceAll("^in ", "");
   }
 
   public long getUid() {
