@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.simpletweets.DialogFragment.TweetDialogFragment;
+import com.codepath.apps.simpletweets.activity.TimelineActivity;
 import com.codepath.apps.simpletweets.listener.ActionBarListener;
 import com.codepath.apps.simpletweets.listener.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.simpletweets.listener.OnCompseListener;
@@ -42,23 +43,8 @@ public class HomeTimelineFragment extends TweetsListFragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    curUser = TimelineActivity.getCurrentUser();
     client = TwitterApp.getRestClient();
-    client.getUserInfo(new JsonHttpResponseHandler() {
-      @Override
-      public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-        curUser = User.fromJSON(response);
-      }
-
-      @Override
-      public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-        Log.e("GetCurrentUserFail", throwable.getMessage());
-      }
-
-      @Override
-      public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-        Log.e("GetCurrentUserFail", throwable.getMessage());
-      }
-    });
   }
 
   @Nullable

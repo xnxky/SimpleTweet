@@ -5,14 +5,21 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.codepath.apps.simpletweets.R;
+import com.codepath.apps.simpletweets.activity.profile.MyProfileActivity;
 import com.codepath.apps.simpletweets.fragments.HomeTimelineFragment;
 import com.codepath.apps.simpletweets.fragments.MentionsTimelineFragment;
 import com.codepath.apps.simpletweets.fragments.TabsFragment;
+import com.codepath.apps.simpletweets.models.User;
+import com.codepath.apps.simpletweets.twitter.TwitterApp;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -20,34 +27,70 @@ public class TimelineActivity extends AppCompatActivity {
   private HomeTimelineFragment fragmentHomeTimeline;
 
   final static private String[] TAB_TITILES = {"Home", "Mentions"};
-  final static String[] fragmentClassNames = {
+  final static String[] FRAGMENT_CLASS_NAMES = {
           HomeTimelineFragment.class.getName(),
           MentionsTimelineFragment.class.getName()
       };
+  final static private String[] FRAGMENT_ARGUMENTS = {null, null};
+
+  private static User curUser;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_timeline);
-    TabsFragment tabsFragment = TabsFragment.newInstance(
-        TAB_TITILES,
-        fragmentClassNames
-    );
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    ft.replace(R.id.flContainer, tabsFragment);
-    ft.commit();
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    ActionBar actionbar = getSupportActionBar();
-    actionbar.setLogo(R.drawable.action_logo);
-    actionbar.setDisplayUseLogoEnabled(true);
-    actionbar.setDisplayShowHomeEnabled(true);
-    actionbar.setHomeButtonEnabled(true);
+    setFragment();
+    setHomePageActionBar();
+    getCurrentUser();
+
     /*
     fragmentHomeTimeline =
         (HomeTimelineFragment) getSupportFragmentManager()
         .findFragmentById(R.id.fragment_timeline);
         */
   }
+
+  private void setFragment() {
+    TabsFragment tabsFragment = TabsFragment.newInstance(
+        TAB_TITILES,
+        FRAGMENT_CLASS_NAMES,
+        FRAGMENT_ARGUMENTS
+    );
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    ft.replace(R.id.flContainer, tabsFragment);
+    ft.commit();
+  }
+
+  private void setHomePageActionBar() {
+    ActionBar actionbar = getSupportActionBar();
+    actionbar.setLogo(R.drawable.action_logo);
+    actionbar.setDisplayUseLogoEnabled(true);
+    actionbar.setDisplayShowHomeEnabled(true);
+    actionbar.setHomeButtonEnabled(true);
+  }
+
+  public static User getCurrentUser() {
+    if(curUser == null) {
+      TwitterApp.getRestClient().getUserInfo(new JsonHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+          curUser = User.fromJSON(response);
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+          Log.e("GetCurrentUserFail", throwable.getMessage());
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+          Log.e("GetCurrentUserFail", throwable.getMessage());
+        }
+      });
+    }
+    return curUser;
+  }
+
 
   @Override
   public boolean onPrepareOptionsMenu (Menu menu){
@@ -81,7 +124,10 @@ public class TimelineActivity extends AppCompatActivity {
   }
 
   public void onProfileView(MenuItem mi) {
-    Intent intent = new Intent(this, ProfileActivity.class);
+    Intent intent = new Intent(this, MyProfileActivity.class);
+    if(getCurrentUser() != null) {
+      intent.putExtra("user", curUser);
+    }
     startActivity(intent);
   }
 

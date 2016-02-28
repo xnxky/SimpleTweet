@@ -5,43 +5,49 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
+import java.lang.reflect.Method;
+
 /**
  * Created by xiangyang_xiao on 2/28/16.
  */
 public class TweetsPagerAdapter extends FragmentPagerAdapter {
   private String[] tabTitles;
-  private String[] fragmentClassNames;
+  private Fragment[] fragments;
 
   public TweetsPagerAdapter(
       String[] tabTitles,
       String[] fragmentClassNames,
+      Object[] fragmentArguments,
       FragmentManager fragmentManager) {
     super(fragmentManager);
     this.tabTitles = tabTitles;
-    this.fragmentClassNames = fragmentClassNames;
-  }
 
-  @Override
-  public Fragment getItem(int position) {
-    if(position < getCount()) {
-      String fragmentClassName = fragmentClassNames[position];
+    fragments = new Fragment[tabTitles.length];
+    for (int i = 0; i < fragmentClassNames.length; i++) {
+      String fragmentClassName = fragmentClassNames[i];
+      Object argument = fragmentArguments[i];
       try {
-        return (Fragment)Class.forName(fragmentClassName).getDeclaredConstructor().newInstance();
+        if (argument == null) {
+          fragments[i] = (Fragment) Class.forName(fragmentClassName)
+              .getDeclaredConstructor()
+              .newInstance();
+        } else {
+          Class argumentClass = argument.getClass();
+          Method newInstanceMethod =
+              Class.forName(fragmentClassName)
+              .getMethod("newInstance", argumentClass);
+          fragments[i] = (Fragment)newInstanceMethod.invoke(null, argumentClass.cast(argument));
+        }
+
       } catch (Exception e) {
         Log.e("FragmentAdapterError", "could not create instance for class " + fragmentClassName);
       }
     }
-    return null;
-    /*
-    switch (position) {
-      case 0:
-        return new HomeTimelineFragment();
-      case 1:
-        return new MentionsTimelineFragment();
-      default:
-        return null;
-    }
-    */
+  }
+
+  @Override
+  public Fragment getItem(int position) {
+    return fragments[position];
   }
 
   @Override
@@ -51,6 +57,6 @@ public class TweetsPagerAdapter extends FragmentPagerAdapter {
 
   @Override
   public int getCount() {
-    return tabTitles.length;
+    return fragments.length;
   }
 }

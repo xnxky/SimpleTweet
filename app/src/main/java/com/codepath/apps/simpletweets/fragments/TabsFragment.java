@@ -27,12 +27,17 @@ public class TabsFragment extends Fragment {
 
   public static TabsFragment newInstance(
       String[] titles,
-      String[] fragmentClassNames
+      String[] fragmentClassNames,
+      //The restriction is that only one serializable argument for each
+      //fragment newInstance, so there are multiple, they have to be
+      //put in a new serializable class
+      Object[] fragmentArguments
   ) {
     TabsFragment tabsFragment = new TabsFragment();
     Bundle args = new Bundle();
     args.putStringArray("titles", titles);
     args.putStringArray("fragmentClassNames", fragmentClassNames);
+    args.putSerializable("fragmentArguments", fragmentArguments);
     tabsFragment.setArguments(args);
     return tabsFragment;
   }
@@ -49,9 +54,12 @@ public class TabsFragment extends Fragment {
     ButterKnife.bind(this, view);
     String[] titles = getArguments().getStringArray("titles");
     String[] fragmentClassNames = getArguments().getStringArray("fragmentClassNames");
+    Object[] fragmentArguments = (Object[])getArguments().getSerializable("fragmentArguments");
+
     vpViewPager.setAdapter(new TweetsPagerAdapter(
         titles,
         fragmentClassNames,
+        fragmentArguments,
         getActivity().getSupportFragmentManager())
     );
     tabStrip.setViewPager(vpViewPager);

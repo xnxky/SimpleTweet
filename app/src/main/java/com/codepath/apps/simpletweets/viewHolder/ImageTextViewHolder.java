@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletweets.R;
-import com.codepath.apps.simpletweets.activity.ProfileActivity;
+import com.codepath.apps.simpletweets.activity.profile.OtherProfileActivity;
 import com.codepath.apps.simpletweets.listener.OnItemClickListener;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.util.CustomStyle;
@@ -67,7 +67,7 @@ public class ImageTextViewHolder extends BaseViewHolder {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            Intent intent = new Intent(mContext, ProfileActivity.class);
+            Intent intent = new Intent(mContext, OtherProfileActivity.class);
             intent.putExtra("user", tweet.getUser());
             mContext.startActivity(intent);
           }

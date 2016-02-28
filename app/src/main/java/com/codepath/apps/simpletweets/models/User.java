@@ -34,10 +34,6 @@ public class User
   @Column(name = "followers_count")
   private int followersCount;
 
-  private static User currentUser;
-
-  static {}
-
   public int getFollowersCount() {
     return followersCount;
   }
@@ -102,7 +98,4 @@ public class User
     return "@"+screenName+"     ";
   }
 
-  public static void getCurrentUser() {
-
-  }
 }
