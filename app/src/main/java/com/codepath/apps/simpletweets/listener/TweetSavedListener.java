@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.adapter.TweetRecylerViewAdapter;
+import com.codepath.apps.simpletweets.fragments.TweetsListFragment;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.models.User;
 import com.codepath.apps.simpletweets.twitter.TwitterReply;
@@ -60,16 +61,14 @@ public class TweetSavedListener {
   public TweetSavedListener(
       User user, long replyId, String author,
       Context context,
-      ArrayList<Tweet> tweets,
-      TweetRecylerViewAdapter aTweets
-
+      TweetsListFragment fragmentTweetsList
   ) {
     this.user = user;
     this.replyId = replyId;
     this.author = "@"+author;
     this.context = context;
-    this.aTweets = aTweets;
-    this.tweets = tweets;
+    this.aTweets = fragmentTweetsList.getRcAdapter();
+    this.tweets = fragmentTweetsList.getTweets();
   }
 
   public void setUpView() {

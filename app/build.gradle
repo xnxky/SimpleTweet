@@ -45,5 +45,6 @@ dependencies {
   //can not make it work
   compile 'com.github.danylovolokh:video-player-manager:0.2.0'
   compile 'jp.wasabeef:recyclerview-animators:2.2.0'
+  compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
 
