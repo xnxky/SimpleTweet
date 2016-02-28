@@ -46,5 +46,6 @@ dependencies {
   compile 'com.github.danylovolokh:video-player-manager:0.2.0'
   compile 'jp.wasabeef:recyclerview-animators:2.2.0'
   compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+  compile 'com.google.guava:guava:19.0'
 }
 

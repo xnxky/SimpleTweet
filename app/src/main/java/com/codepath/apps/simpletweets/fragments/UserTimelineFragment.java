@@ -33,11 +33,19 @@ import java.util.List;
 /**
  * Created by xiangyang_xiao on 2/27/16.
  */
-public class MentionsTimelineFragment extends TweetsListFragment {
+public class UserTimelineFragment extends TweetsListFragment {
 
   private TwitterClient client;
   private User curUser;
   private ActionBarListener actionBarListener;
+
+  public static UserTimelineFragment newInstance(String screen_name) {
+    UserTimelineFragment userFragment =  new UserTimelineFragment();
+    Bundle args = new Bundle();
+    args.putString("screen_name", screen_name);
+    userFragment.setArguments(args);
+    return userFragment;
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -145,7 +153,8 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     if(actionBarListener != null) {
       actionBarListener.onDefault();
     }
-    client.getMentionsTimeline(new JsonHttpResponseHandler() {
+    String screen_name = getArguments().getString("screen_name");
+    client.getUserTimeline(screen_name, new JsonHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
         if (actionBarListener != null) {
@@ -181,5 +190,4 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
     dialogFragment.show(fragmentManager, "compose");
   }
-
 }

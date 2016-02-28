@@ -1,6 +1,7 @@
 package com.codepath.apps.simpletweets.viewHolder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletweets.R;
+import com.codepath.apps.simpletweets.activity.ProfileActivity;
 import com.codepath.apps.simpletweets.listener.OnItemClickListener;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.util.CustomStyle;
@@ -42,7 +44,7 @@ public class ImageTextViewHolder extends BaseViewHolder {
   }
 
   @Override
-  public void bindView(Tweet tweet) {
+  public void bindView(final Tweet tweet) {
     int black = ContextCompat.getColor(mContext, R.color.black);
     SpannableStringBuilder nameText = CustomStyle.stylizeFirstPart(
         tweet.getUser().getName(),
@@ -61,5 +63,15 @@ public class ImageTextViewHolder extends BaseViewHolder {
         .placeholder(R.drawable.placeholder)
         .error(R.drawable.placeholder_error)
         .into(ivProfileImage);
+    ivProfileImage.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Intent intent = new Intent(mContext, ProfileActivity.class);
+            intent.putExtra("user", tweet.getUser());
+            mContext.startActivity(intent);
+          }
+        }
+    );
   }
 }

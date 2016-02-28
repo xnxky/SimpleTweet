@@ -43,7 +43,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     client = TwitterApp.getRestClient();
-    client.getCurrentUser(new JsonHttpResponseHandler() {
+    client.getUserInfo(new JsonHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
         curUser = User.fromJSON(response);
@@ -65,7 +65,6 @@ public class HomeTimelineFragment extends TweetsListFragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = super.onCreateView(inflater, container, savedInstanceState);
-    fabTweet.setVisibility(View.VISIBLE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
     EndlessRecyclerViewScrollListener onScrollListener =
         new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -102,7 +101,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
             if (curUser != null) {
               startTweet();
             } else {
-              client.getCurrentUser(new JsonHttpResponseHandler() {
+              client.getUserInfo(new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                   curUser = User.fromJSON(response);

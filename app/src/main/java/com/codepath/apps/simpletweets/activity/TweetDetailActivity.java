@@ -2,6 +2,7 @@ package com.codepath.apps.simpletweets.activity;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.codepath.apps.simpletweets.R;
+import com.codepath.apps.simpletweets.fragments.UserHeaderFragment;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.models.User;
 import com.codepath.apps.simpletweets.twitter.TwitterReply;
@@ -24,14 +26,7 @@ import butterknife.ButterKnife;
 
 public class TweetDetailActivity extends AppCompatActivity {
 
-  @Bind(R.id.tvRetweet)
-  TextView tvRetweet;
-  @Bind(R.id.ivProfileImage)
-  ImageView ivProfileImage;
-  @Bind(R.id.tvUserName)
-  TextView tvUserName;
-  @Bind(R.id.tvScreenName)
-  TextView tvScreenName;
+
   @Bind(R.id.tvBody)
   TextView tvBody;
   @Bind(R.id.ivBody)
@@ -73,16 +68,11 @@ public class TweetDetailActivity extends AppCompatActivity {
   }
 
   private void setupView() {
-    Picasso.with(this)
-        .load(tweet.getUser().getProfileImageUrl())
-        .fit()
-        .error(R.drawable.placeholder_error)
-        .placeholder(R.drawable.placeholder)
-        .into(ivProfileImage);
+    UserHeaderFragment fragmentUserHeader = UserHeaderFragment.newInstance(author);
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    ft.replace(R.id.flUserHeader, fragmentUserHeader);
+    ft.commit();
 
-    tvUserName.setText(tweet.getUser().getName());
-    String screenName = "@" + tweet.getUser().getScreenName();
-    tvScreenName.setText(screenName);
     tvBody.setText(tweet.getBody());
     btnTweet.setVisibility(View.GONE);
     ivCancel.setVisibility(View.GONE);

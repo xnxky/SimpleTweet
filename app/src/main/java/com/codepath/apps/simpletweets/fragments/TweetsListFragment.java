@@ -91,10 +91,8 @@ public class TweetsListFragment extends Fragment {
         android.R.color.holo_orange_light,
         android.R.color.holo_red_light
     );
-    fabTweet.setVisibility(View.GONE);
     return view;
   }
-
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {

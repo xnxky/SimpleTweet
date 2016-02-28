@@ -28,6 +28,31 @@ public class User
   @Column(name = "profile_url")
   private String profileImageUrl;
 
+  @Column(name = "tagline")
+  private String tagline;
+
+  @Column(name = "followers_count")
+  private int followersCount;
+
+  private static User currentUser;
+
+  static {}
+
+  public int getFollowersCount() {
+    return followersCount;
+  }
+
+  public String getTagline() {
+    return tagline;
+  }
+
+  public int getFriendsCount() {
+    return followingsCount;
+  }
+
+  @Column(name = "followings_count")
+  private int followingsCount;
+
   public User() {
     super();
   }
@@ -46,6 +71,9 @@ public class User
       user.uid = json.getLong("id");
       user.screenName = json.getString("screen_name");
       user.profileImageUrl = json.getString("profile_image_url");
+      user.tagline = json.getString("description");
+      user.followersCount = json.getInt("followers_count");
+      user.followingsCount = json.getInt("friends_count");
       user.save();
       return user;
     } catch (JSONException e) {
@@ -72,5 +100,9 @@ public class User
 
   public String getPrefixName() {
     return "@"+screenName+"     ";
+  }
+
+  public static void getCurrentUser() {
+
   }
 }
