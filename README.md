@@ -17,13 +17,14 @@ The following **required** functionality is completed:
 * [X] User can **click on the profile image** in any tweet to see **another user's** profile.
  * [X] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
  * [X] Profile view includes that user's timeline
-* [ ] User can [infinitely paginate](http://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews-and-RecyclerView) any of these timelines (home, mentions, user) by scrolling to the bottom
+
+ * [X] User can [infinitely paginate](http://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews-and-RecyclerView) any of these timelines (home, mentions, user) by scrolling to the bottom
 
 The following **optional** features are implemented:
 
 * [X] User can view following / followers list through the profile
-* [[[ X] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
-* [[ X] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
+  * []X] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
+  *[ ]X] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
 * [X] User can **"reply" to any tweet on their home timeline**
   * [X] The user that wrote the original tweet is automatically "@" replied in compose
 * [X] User can click on a tweet to be **taken to a "detail view"** of that tweet
@@ -34,13 +35,13 @@ The following **optional** features are implemented:
 The following **bonus** features are implemented:
 
 * [ ] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
-* [ X] Apply the popular [Butterknife annotation library](http://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife) to reduce view boilerplate.
+* []X] Apply the popular [Butterknife annotation library](http://guides.codepath.com/android/Reducing-View-Boilerplate-with-Butterknife) to reduce view boilerplate.
 * [ ] User can view their direct messages (or send new ones)
 
 The following **additional** features are implemented:
 
 * [X] List anything else that you can get done to improve the app functionality!
-*   *] Create the generic tabFragment hierachy to make the creation of multi-tabs fragment much eaiser
+*   [X] Create the generic tabFragment hierachy to make the creation of multi-tabs fragment much eaiser
 
 ## Video Walkthrough 
 
