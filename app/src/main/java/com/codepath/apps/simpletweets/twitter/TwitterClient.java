@@ -47,19 +47,25 @@ public class TwitterClient extends OAuthBaseClient {
     String url = getApiUrl("statuses/home_timeline.json");
     RequestParams params = new RequestParams();
     params.put("count", COUNT_PER_FETCH);
-    if (Tweet.getMaxId() > 1) {
-      params.put("max_id", Tweet.getMaxId() - 1);
+    if (Tweet.getMaxHomelineId() > 1) {
+      params.put("max_id", Tweet.getMaxHomelineId() - 1);
     }
     getClient().get(url, params, handler);
   }
 
-  public void getCurrentUser(AsyncHttpResponseHandler handler) {
-    String url = getApiUrl("account/verify_credentials.json");
+
+
+  //Not quite work
+  public void getUsers(String ids, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("users/lookup.json");
     RequestParams params = new RequestParams();
-    params.put("include_entities", false);
-    params.put("skip_status", false);
-    params.put("include_email", false);
+    params.put("user_id", ids);
     getClient().get(url, params, handler);
+  }
+
+  public void getUserInfo(AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("account/verify_credentials.json");
+    getClient().get(url, null, handler);
   }
 
   public void postTweet(
@@ -74,6 +80,45 @@ public class TwitterClient extends OAuthBaseClient {
       params.put("in_reply_to_status_id", in_reply_to_status_id);
     }
     getClient().post(url, params, handler);
+  }
+
+  public void getMentionsTimeline(AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("statuses/mentions_timeline.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    getClient().get(url, params, handler);
+  }
+
+  public void getUserTimeline(String screenName, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("statuses/user_timeline.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    params.put("screen_name", screenName);
+    getClient().get(url, params, handler);
+  }
+
+  public void getUserFavorites(String screenName, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("favorites/list.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    params.put("screen_name", screenName);
+    getClient().get(url, params, handler);
+  }
+
+  public void getFollowers(String screenName, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("followers/list.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    params.put("screen_name", screenName);
+    getClient().get(url, params, handler);
+  }
+
+  public void getFollowees(String screenName, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("friends/list.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    params.put("screen_name", screenName);
+    getClient().get(url, params, handler);
   }
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint

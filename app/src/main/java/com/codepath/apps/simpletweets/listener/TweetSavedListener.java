@@ -9,11 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletweets.R;
-import com.codepath.apps.simpletweets.adapter.TweetsArrayAdapter;
+import com.codepath.apps.simpletweets.adapter.TweetRecylerViewAdapter;
+import com.codepath.apps.simpletweets.fragments.TweetsListFragment;
 import com.codepath.apps.simpletweets.models.Tweet;
 import com.codepath.apps.simpletweets.models.User;
 import com.codepath.apps.simpletweets.twitter.TwitterReply;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,7 +42,8 @@ public class TweetSavedListener {
 
   private Dialog dialog;
   private Context context;
-  private TweetsArrayAdapter aTweets;
+  private TweetRecylerViewAdapter aTweets;
+  private ArrayList<Tweet> tweets;
 
   private User user;
   private long replyId;
@@ -57,14 +61,14 @@ public class TweetSavedListener {
   public TweetSavedListener(
       User user, long replyId, String author,
       Context context,
-      TweetsArrayAdapter aTweets
-
+      TweetsListFragment fragmentTweetsList
   ) {
     this.user = user;
     this.replyId = replyId;
-    this.author = author;
+    this.author = "@"+author;
     this.context = context;
-    this.aTweets = aTweets;
+    this.aTweets = (TweetRecylerViewAdapter)fragmentTweetsList.getRcAdapter();
+    this.tweets = fragmentTweetsList.getObjects();
   }
 
   public void setUpView() {
@@ -81,23 +85,25 @@ public class TweetSavedListener {
     //profile image
     Picasso.with(context)
         .load(user.getProfileImageUrl())
+        .fit()
+        .placeholder(R.drawable.placeholder)
+        .error(R.drawable.placeholder_error)
         .into(ivProfileImage);
     tvUsername.setText(user.getName());
-    String screenName = "@" + user.getScreenName();
-    tvScreenName.setText(screenName);
+    tvScreenName.setText(user.getPrefixName());
     TwitterReply.SetTwitterReply(
         etTweet,
         tvLeftCharCount,
         btnTweet,
         replyId,
-        author,
         context,
         this
     );
   }
 
   public void finish(Tweet newTweet) {
-    aTweets.insert(newTweet, 0);
+    tweets.add(0, newTweet);
+    aTweets.notifyItemInserted(0);
     dialog.dismiss();
   }
 }

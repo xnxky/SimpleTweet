@@ -32,7 +32,6 @@ public class TwitterReply {
       final TextView tvLeftCharCount,
       final Button btnTweet,
       final long replyId,
-      final String author,
       final Context activity,
       final TweetSavedListener listener
   ) {
@@ -80,9 +79,8 @@ public class TwitterReply {
                   Toast.LENGTH_SHORT
               ).show();
             } else {
-              String prefix = replyId < 0 ? "" : "@" + author;
               client.postTweet(
-                  prefix + "    " + etTweet.getText().toString(),
+                  etTweet.getText().toString(),
                   replyId,
                   new JsonHttpResponseHandler() {
                     @Override

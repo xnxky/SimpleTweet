@@ -47,13 +47,13 @@ public class TweetActivity extends AppCompatActivity {
 
     Intent intent = getIntent();
     replyId = intent.getIntExtra("replyId", -1);
-    author = intent.hasExtra("author") ?
-        intent.getStringExtra("author") : "";
+    String initTweetText = intent.hasExtra("author") ?
+        ((User)intent.getSerializableExtra("author")).getPrefixName() : "";
     user = (User) intent.getSerializableExtra("user");
-    setUpView();
+    setUpView(initTweetText);
   }
 
-  public void setUpView() {
+  public void setUpView(String initTweetText) {
     //cancel image
     ivCancel.setOnClickListener(
         new View.OnClickListener() {
@@ -64,9 +64,14 @@ public class TweetActivity extends AppCompatActivity {
         }
     );
 
+    etTweet.setText(initTweetText);
+
     //profile image
     Picasso.with(this)
         .load(user.getProfileImageUrl())
+        .error(R.drawable.placeholder_error)
+        .placeholder(R.drawable.placeholder)
+        .fit()
         .into(ivProfileImage);
     tvUsername.setText(user.getName());
     String screenName = "@" + user.getScreenName();
@@ -76,7 +81,6 @@ public class TweetActivity extends AppCompatActivity {
         tvLeftCharCount,
         btnTweet,
         replyId,
-        author,
         this,
         null
     );
