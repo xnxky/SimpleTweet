@@ -31,5 +31,10 @@ public class HomeTimelineFragment extends TweetsListFragment {
         .execute();
   }
 
+  @Override
+  protected void preRefreshAction() {
+    Tweet.setMaxHomelineId(-1);
+  }
+
 }
 

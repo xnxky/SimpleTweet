@@ -1,5 +1,6 @@
 package com.codepath.apps.simpletweets.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,11 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletweets.R;
+import com.codepath.apps.simpletweets.activity.FollowActivity;
 import com.codepath.apps.simpletweets.models.User;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by xiangyang_xiao on 2/28/16.
@@ -73,6 +76,24 @@ public class UserHeaderFragment extends Fragment {
 
     tvFollowee.setText(followingText);
     tvFollower.setText(followerText);
+  }
+
+  @OnClick(R.id.tvFollowee)
+  public void showFollowees() {
+    Intent intent = new Intent(getActivity(), FollowActivity.class);
+    User user = (User)getArguments().getSerializable("user");
+    intent.putExtra("user", user);
+    intent.putExtra("follow_type", "followee");
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.tvFollower)
+  public void showFollowers() {
+    Intent intent = new Intent(getActivity(), FollowActivity.class);
+    User user = (User)getArguments().getSerializable("user");
+    intent.putExtra("user", user);
+    intent.putExtra("follow_type", "follower");
+    startActivity(intent);
   }
 
 }

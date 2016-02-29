@@ -17,7 +17,7 @@ import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.adapter.RecyclerViewAdapter;
 import com.codepath.apps.simpletweets.listener.ActionBarListener;
 import com.codepath.apps.simpletweets.listener.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.listener.HandleNewObjectsListener;
 import com.codepath.apps.simpletweets.twitter.TwitterApp;
 import com.codepath.apps.simpletweets.twitter.TwitterClient;
 import com.codepath.apps.simpletweets.util.NetworkCheck;
@@ -60,13 +60,15 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
   protected RecyclerViewAdapter rcAdapter;
   protected AsyncHttpResponseHandler responseHandler;
   protected ActionBarListener actionBarListener;
+  protected HandleNewObjectsListener<T> handleNewObjectsListener;
+  protected boolean useHandleNewListener;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     client = TwitterApp.getRestClient();
     objects = new ArrayList<>();
-    setResponseHandler();
+    useHandleNewListener = false;
   }
 
   protected void setResponseHandler() {
@@ -76,7 +78,21 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
         if (actionBarListener != null) {
           actionBarListener.onSuccess();
         }
-        handleNewObjects(getObjectsFromJsonArray(response));
+        List<T> newObjects = getObjectsFromJsonArray(response);
+        if(! useHandleNewListener) {
+          handleNewObjects(newObjects);
+        }
+      }
+
+      @Override
+      public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+        if (actionBarListener != null) {
+          actionBarListener.onSuccess();
+        }
+        List<T> newObjects = getObjectsFromJsonObject(response);
+        if(! useHandleNewListener) {
+          handleNewObjects(newObjects);
+        }
       }
 
       @Override
@@ -87,6 +103,13 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
         Log.d("FailToFetch", errorResponse.toString());
         Toast.makeText(getActivity(), "fail to fetch data; use local data instead", Toast.LENGTH_SHORT).show();
         handleNewObjects(getAllStoredObjects());
+      }
+    };
+
+    handleNewObjectsListener = new HandleNewObjectsListener<T>() {
+      @Override
+      public void handleNewObjects(List<T> objects) {
+        handleNewObjects(objects);
       }
     };
   }
@@ -109,12 +132,14 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
         new SwipeRefreshLayout.OnRefreshListener() {
           @Override
           public void onRefresh() {
-            //TODO: problematic
-            Tweet.setMaxId(-1);
+            preRefreshAction();
             populateTimeline();
           }
         };
     srlContainer.setOnRefreshListener(onRefreshListener);
+  }
+
+  protected void preRefreshAction() {
   }
 
   @Nullable
@@ -122,6 +147,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(getLayoutId(), container, false);
     ButterKnife.bind(this, view);
+    setResponseHandler();
     setRcAdapater();
     setOnScrollListener();
     setOnRefreshListener();

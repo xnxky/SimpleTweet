@@ -57,7 +57,7 @@ public class TimelineActivity extends AppCompatActivity {
         FRAGMENT_ARGUMENTS
     );
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    ft.replace(R.id.flContainer, tabsFragment);
+    ft.replace(R.id.flTimelineContainer, tabsFragment);
     ft.commit();
   }
 

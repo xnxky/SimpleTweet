@@ -28,6 +28,7 @@ public abstract class FollowFragment extends RecyclerViewFragment<User> {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    useHandleNewListener = true;
   }
 
   @Override
@@ -67,10 +68,17 @@ public abstract class FollowFragment extends RecyclerViewFragment<User> {
   @Override
   protected ArrayList<User> getObjectsFromJsonObject(JSONObject response) {
     try {
-      return User.fromJSONArray(response.getJSONArray("ids"));
+      setCursor(response.getInt("next_cursor"));
+      User.fromUserIds(
+          response.getJSONArray("ids"),
+          handleNewObjectsListener
+      );
     } catch (JSONException e) {
       Log.e("JSON Follow Error", e.getMessage());
     }
     return new ArrayList<>();
   }
+
+  protected abstract void setCursor(int nextCursor);
+
 }

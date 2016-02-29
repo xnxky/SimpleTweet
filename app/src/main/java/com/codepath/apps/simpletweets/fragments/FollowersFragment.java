@@ -13,6 +13,7 @@ public class FollowersFragment extends FollowFragment {
   public static FollowersFragment newInstance(User user) {
     FollowersFragment followersFragment = new FollowersFragment();
     Bundle args = new Bundle();
+    user.resetCursor();
     args.putSerializable("user", user);
     followersFragment.setArguments(args);
     return followersFragment;
@@ -20,11 +21,17 @@ public class FollowersFragment extends FollowFragment {
 
   protected void fetchData(AsyncHttpResponseHandler handler) {
     User targetUser = (User) getArguments().getSerializable("user");
-    targetUser.resetCursor();
     client.getFollowers(
         targetUser,
         handler
     );
+  }
+
+  @Override
+  protected void setCursor(int nextCursor) {
+    User targetUser = (User) getArguments().getSerializable("user");
+    assert targetUser != null;
+    targetUser.setFollowersCursor(nextCursor);
   }
 
 }

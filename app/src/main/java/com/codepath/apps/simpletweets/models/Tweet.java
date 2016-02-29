@@ -26,7 +26,7 @@ public class Tweet
     extends Model
     implements Serializable {
 
-  private static long maxId = -1;
+  private static long maxHomelineId = -1;
   @Column(name = "body")
   private String body;
   @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
@@ -54,12 +54,12 @@ public class Tweet
     super();
   }
 
-  public static long getMaxId() {
-    return maxId;
+  public static long getMaxHomelineId() {
+    return maxHomelineId;
   }
 
-  public static void setMaxId(long maxId) {
-    Tweet.maxId = maxId;
+  public static void setMaxHomelineId(long maxHomelineId) {
+    Tweet.maxHomelineId = maxHomelineId;
   }
 
   public static String fromRawTweetDate(String tweetDate) {
@@ -90,8 +90,8 @@ public class Tweet
           .where("uid = ?", jsonObject.getLong("id"))
           .executeSingle();
       if (existingTweet != null) {
-        if (maxId < 0 || maxId > existingTweet.uid) {
-          maxId = existingTweet.uid;
+        if (maxHomelineId < 0 || maxHomelineId > existingTweet.uid) {
+          maxHomelineId = existingTweet.uid;
         }
         return existingTweet;
       }
@@ -141,8 +141,8 @@ public class Tweet
         tweet.videoUrl = null;
       }
 
-      if (maxId < 0 || maxId > tweet.uid) {
-        maxId = tweet.uid;
+      if (maxHomelineId < 0 || maxHomelineId > tweet.uid) {
+        maxHomelineId = tweet.uid;
       }
       if (saveFlag) {
         tweet.save();

@@ -48,20 +48,23 @@ public class TwitterClient extends OAuthBaseClient {
     String url = getApiUrl("statuses/home_timeline.json");
     RequestParams params = new RequestParams();
     params.put("count", COUNT_PER_FETCH);
-    if (Tweet.getMaxId() > 1) {
-      params.put("max_id", Tweet.getMaxId() - 1);
+    if (Tweet.getMaxHomelineId() > 1) {
+      params.put("max_id", Tweet.getMaxHomelineId() - 1);
     }
+    getClient().get(url, params, handler);
+  }
+
+
+
+  public void getUsers(String ids, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("users/lookup.json");
+    RequestParams params = new RequestParams();
+    params.put("user_id", ids);
     getClient().get(url, params, handler);
   }
 
   public void getUserInfo(AsyncHttpResponseHandler handler) {
     String url = getApiUrl("account/verify_credentials.json");
-    /*
-    RequestParams params = new RequestParams();
-    params.put("include_entities", false);
-    params.put("skip_status", false);
-    params.put("include_email", false);
-    */
     getClient().get(url, null, handler);
   }
 
@@ -99,7 +102,7 @@ public class TwitterClient extends OAuthBaseClient {
     RequestParams params = new RequestParams();
     params.put("count", COUNT_PER_FETCH);
     params.put("screen_name", user.getScreenName());
-    params.put("cursor", user.getFollowersCount());
+    params.put("cursor", user.getFollowersCursor());
     getClient().get(url, params, handler);
   }
 

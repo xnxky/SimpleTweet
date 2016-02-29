@@ -37,6 +37,6 @@
         android:layout_below="@id/profileDivder"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/flContainer">
+        android:id="@+id/flProfileContainer">
     </FrameLayout>
 </RelativeLayout>

@@ -46,7 +46,7 @@ public abstract class ProfileActivity extends AppCompatActivity {
       String screenName = user == null ? null : user.getScreenName();
       Fragment fragmentUserTimeline = getTimelineFragment(screenName);
       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-      ft.replace(R.id.flContainer, fragmentUserTimeline);
+      ft.replace(R.id.flProfileContainer, fragmentUserTimeline);
       ft.replace(R.id.flUserHeader, fragmentUserHeader);
       ft.commit();
     }
