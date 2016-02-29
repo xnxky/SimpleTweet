@@ -67,8 +67,8 @@ public class TweetSavedListener {
     this.replyId = replyId;
     this.author = "@"+author;
     this.context = context;
-    this.aTweets = fragmentTweetsList.getRcAdapter();
-    this.tweets = fragmentTweetsList.getTweets();
+    this.aTweets = (TweetRecylerViewAdapter)fragmentTweetsList.getRcAdapter();
+    this.tweets = fragmentTweetsList.getObjects();
   }
 
   public void setUpView() {

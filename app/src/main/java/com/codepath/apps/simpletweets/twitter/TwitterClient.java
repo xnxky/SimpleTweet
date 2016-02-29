@@ -3,6 +3,7 @@ package com.codepath.apps.simpletweets.twitter;
 import android.content.Context;
 
 import com.codepath.apps.simpletweets.models.Tweet;
+import com.codepath.apps.simpletweets.models.User;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -93,6 +94,23 @@ public class TwitterClient extends OAuthBaseClient {
     getClient().get(url, params, handler);
   }
 
+  public void getFollowers(User user, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("followers/ids.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    params.put("screen_name", user.getScreenName());
+    params.put("cursor", user.getFollowersCount());
+    getClient().get(url, params, handler);
+  }
+
+  public void getFollowees(User user, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("friends/ids.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    params.put("screen_name", user.getScreenName());
+    params.put("cursor", user.getFolloweesCursor());
+    getClient().get(url, params, handler);
+  }
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
      * 	  i.e getApiUrl("statuses/home_timeline.json");

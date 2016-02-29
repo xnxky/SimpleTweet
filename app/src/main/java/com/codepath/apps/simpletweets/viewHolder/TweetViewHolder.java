@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by xiangyang_xiao on 2/14/16.
  */
-public class ImageTextViewHolder extends BaseViewHolder {
+public class TweetViewHolder extends BaseViewHolder {
 
   @Bind(R.id.ivProfileImage)
   ImageView ivProfileImage;
@@ -37,14 +37,15 @@ public class ImageTextViewHolder extends BaseViewHolder {
 
   Context mContext;
 
-  public ImageTextViewHolder(View itemView, OnItemClickListener listener, Context context) {
+  public TweetViewHolder(View itemView, OnItemClickListener listener, Context context) {
     super(itemView, listener);
     mContext = context;
     ButterKnife.bind(this, itemView);
   }
 
   @Override
-  public void bindView(final Tweet tweet) {
+  public void bindView(Object tweetObj) {
+    final Tweet tweet = Tweet.class.cast(tweetObj);
     int black = ContextCompat.getColor(mContext, R.color.black);
     SpannableStringBuilder nameText = CustomStyle.stylizeFirstPart(
         tweet.getUser().getName(),

@@ -65,11 +65,14 @@ public class UserHeaderFragment extends Fragment {
     .into(ivProfileImage);
 
     tvUserName.setText(user.getName());
-    String screenName = "@" + user.getScreenName();
+    String screenName = user.getTagline();
     tvScreenName.setText(screenName);
 
-    tvFollowee.setText(user.getFriendsCount()+" "+"Followig");
-    tvFollower.setText(user.getFollowersCount()+" "+"Followers");
+    String followingText = user.getFriendsCount()+" "+"Followig";
+    String followerText = user.getFollowersCount()+" "+"Followers";
+
+    tvFollowee.setText(followingText);
+    tvFollower.setText(followerText);
   }
 
 }

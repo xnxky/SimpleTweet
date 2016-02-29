@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.codepath.apps.simpletweets.listener.OnItemClickListener;
-import com.codepath.apps.simpletweets.models.Tweet;
 
 /**
  * Created by xiangyang_xiao on 2/14/16.
@@ -28,5 +27,5 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     );
   }
 
-  public abstract void bindView(Tweet tweet);
+  public abstract void bindView(Object object);
 }

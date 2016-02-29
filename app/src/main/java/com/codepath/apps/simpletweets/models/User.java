@@ -5,10 +5,12 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by xiangyang_xiao on 2/17/16.
@@ -33,6 +35,25 @@ public class User
 
   @Column(name = "followers_count")
   private int followersCount;
+
+  public int getFollowersCursor() {
+    return followersCursor;
+  }
+
+  public int getFolloweesCursor() {
+    return followeesCursor;
+  }
+
+  public void setFollowersCursor(int followersCursor) {
+    this.followersCursor = followersCursor;
+  }
+
+  public void setFolloweesCursor(int followeesCursor) {
+    this.followeesCursor = followeesCursor;
+  }
+
+  private int followersCursor = -1;
+  private int followeesCursor = -1;
 
   public int getFollowersCount() {
     return followersCount;
@@ -76,6 +97,27 @@ public class User
       e.printStackTrace();
     }
     return null;
+  }
+
+  public static ArrayList<User> fromJSONArray(JSONArray response) {
+    ArrayList<User> users = new ArrayList<>();
+    for (int i = 0; i < response.length(); i++) {
+      try {
+        JSONObject userJson = response.getJSONObject(i);
+        User user = User.fromJSON(userJson);
+        if (user != null) {
+          users.add(user);
+        }
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return users;
+  }
+
+  public void resetCursor() {
+    followeesCursor = -1;
+    followeesCursor = -1;
   }
 
   public long getUid() {
