@@ -20,6 +20,8 @@
         android:id="@+id/tvFollower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_alignTop="@id/tvFollowee"
         android:layout_toEndOf="@id/tvFollowee"
         android:layout_toRightOf="@id/tvFollowee"

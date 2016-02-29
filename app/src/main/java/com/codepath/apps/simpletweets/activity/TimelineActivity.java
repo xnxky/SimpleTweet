@@ -13,7 +13,9 @@ import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.activity.profile.MyProfileActivity;
 import com.codepath.apps.simpletweets.fragments.HomeTimelineFragment;
 import com.codepath.apps.simpletweets.fragments.MentionsTimelineFragment;
+import com.codepath.apps.simpletweets.fragments.RecyclerViewFragment;
 import com.codepath.apps.simpletweets.fragments.TabsFragment;
+import com.codepath.apps.simpletweets.listener.ActionBarListener;
 import com.codepath.apps.simpletweets.models.User;
 import com.codepath.apps.simpletweets.twitter.TwitterApp;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -23,9 +25,6 @@ import org.json.JSONObject;
 
 public class TimelineActivity extends AppCompatActivity {
 
-  private MenuItem miActionProgressItem;
-  private HomeTimelineFragment fragmentHomeTimeline;
-
   final static private String[] TAB_TITILES = {"Home", "Mentions"};
   final static String[] FRAGMENT_CLASS_NAMES = {
           HomeTimelineFragment.class.getName(),
@@ -34,6 +33,8 @@ public class TimelineActivity extends AppCompatActivity {
   final static private String[] FRAGMENT_ARGUMENTS = {null, null};
 
   private static User curUser;
+  private ActionBarListener actionBarListener;
+  private MenuItem miActionProgressItem;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +43,6 @@ public class TimelineActivity extends AppCompatActivity {
     setFragment();
     setHomePageActionBar();
     getCurrentUser();
-
-    /*
-    fragmentHomeTimeline =
-        (HomeTimelineFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.fragment_timeline);
-        */
   }
 
   private void setFragment() {
@@ -91,12 +86,10 @@ public class TimelineActivity extends AppCompatActivity {
     return curUser;
   }
 
-
   @Override
   public boolean onPrepareOptionsMenu (Menu menu){
     miActionProgressItem = menu.findItem(R.id.miActionProgress);
-    /*
-    ActionBarListener listener = new ActionBarListener() {
+    actionBarListener = new ActionBarListener() {
       @Override
       public void onDefault() {
         miActionProgressItem.setVisible(true);
@@ -112,9 +105,16 @@ public class TimelineActivity extends AppCompatActivity {
         miActionProgressItem.setVisible(false);
       }
     };
-    fragmentHomeTimeline.setActionBarListener(listener);
-    */
+    RecyclerViewFragment.setActionBarListener(actionBarListener);
     return super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if(actionBarListener != null) {
+      RecyclerViewFragment.setActionBarListener(actionBarListener);
+    }
   }
 
   @Override

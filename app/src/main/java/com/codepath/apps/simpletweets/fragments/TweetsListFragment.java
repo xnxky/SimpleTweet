@@ -20,9 +20,7 @@ import com.codepath.apps.simpletweets.util.NetworkCheck;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.OnClick;
@@ -110,13 +108,8 @@ public abstract class TweetsListFragment extends RecyclerViewFragment<Tweet> {
   }
 
   @Override
-  protected ArrayList<Tweet> getObjectsFromJsonArray(JSONArray response) {
+  protected List<Tweet> getObjectsFromJsonArray(JSONArray response) {
     return Tweet.fromJSONArray(response);
-  }
-
-  @Override
-  protected ArrayList<Tweet> getObjectsFromJsonObject(JSONObject response) {
-    return new ArrayList<>();
   }
 
   @Override

@@ -2,8 +2,8 @@ package com.codepath.apps.simpletweets.activity.profile;
 
 import android.support.v4.app.Fragment;
 
-import com.codepath.apps.simpletweets.fragments.HomeTimelineFragment;
 import com.codepath.apps.simpletweets.fragments.TabsFragment;
+import com.codepath.apps.simpletweets.fragments.UserFavoritesFragment;
 import com.codepath.apps.simpletweets.fragments.UserTimelineFragment;
 
 /**
@@ -11,15 +11,15 @@ import com.codepath.apps.simpletweets.fragments.UserTimelineFragment;
  */
 public class OtherProfileActivity extends ProfileActivity {
 
-  private static final String[] TITLES = {"HOME", "TWEETS"};
+  private static final String[] TITLES = {"TWEETS", "FAVORITES"};
   private static final String[] FRAGMENT_CLASS_NAMES = {
-      HomeTimelineFragment.class.getName(),
-      UserTimelineFragment.class.getName()
+      UserTimelineFragment.class.getName(),
+      UserFavoritesFragment.class.getName()
   };
 
   @Override
   protected Fragment getTimelineFragment(String screenName) {
-    Object[] arguments = {null, screenName};
+    Object[] arguments = {screenName, screenName};
     return TabsFragment.newInstance(
         TITLES,
         FRAGMENT_CLASS_NAMES,

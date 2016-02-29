@@ -3,7 +3,6 @@ package com.codepath.apps.simpletweets.twitter;
 import android.content.Context;
 
 import com.codepath.apps.simpletweets.models.Tweet;
-import com.codepath.apps.simpletweets.models.User;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -56,6 +55,7 @@ public class TwitterClient extends OAuthBaseClient {
 
 
 
+  //Not quite work
   public void getUsers(String ids, AsyncHttpResponseHandler handler) {
     String url = getApiUrl("users/lookup.json");
     RequestParams params = new RequestParams();
@@ -97,21 +97,27 @@ public class TwitterClient extends OAuthBaseClient {
     getClient().get(url, params, handler);
   }
 
-  public void getFollowers(User user, AsyncHttpResponseHandler handler) {
-    String url = getApiUrl("followers/ids.json");
+  public void getUserFavorites(String screenName, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("favorites/list.json");
     RequestParams params = new RequestParams();
     params.put("count", COUNT_PER_FETCH);
-    params.put("screen_name", user.getScreenName());
-    params.put("cursor", user.getFollowersCursor());
+    params.put("screen_name", screenName);
     getClient().get(url, params, handler);
   }
 
-  public void getFollowees(User user, AsyncHttpResponseHandler handler) {
-    String url = getApiUrl("friends/ids.json");
+  public void getFollowers(String screenName, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("followers/list.json");
     RequestParams params = new RequestParams();
     params.put("count", COUNT_PER_FETCH);
-    params.put("screen_name", user.getScreenName());
-    params.put("cursor", user.getFolloweesCursor());
+    params.put("screen_name", screenName);
+    getClient().get(url, params, handler);
+  }
+
+  public void getFollowees(String screenName, AsyncHttpResponseHandler handler) {
+    String url = getApiUrl("friends/list.json");
+    RequestParams params = new RequestParams();
+    params.put("count", COUNT_PER_FETCH);
+    params.put("screen_name", screenName);
     getClient().get(url, params, handler);
   }
 

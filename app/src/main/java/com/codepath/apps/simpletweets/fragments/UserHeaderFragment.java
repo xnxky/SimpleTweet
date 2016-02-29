@@ -15,6 +15,9 @@ import com.codepath.apps.simpletweets.activity.FollowActivity;
 import com.codepath.apps.simpletweets.models.User;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -71,11 +74,19 @@ public class UserHeaderFragment extends Fragment {
     String screenName = user.getTagline();
     tvScreenName.setText(screenName);
 
-    String followingText = user.getFriendsCount()+" "+"Followig";
-    String followerText = user.getFollowersCount()+" "+"Followers";
+
+    String followingText =
+        getFormattedNum(user.getFriendsCount())+" "+"Followig";
+
+    String followerText =
+        getFormattedNum(user.getFollowersCount())+" "+"Followers";
 
     tvFollowee.setText(followingText);
     tvFollower.setText(followerText);
+  }
+
+  private String getFormattedNum(int count) {
+    return NumberFormat.getNumberInstance(Locale.US).format(count);
   }
 
   @OnClick(R.id.tvFollowee)

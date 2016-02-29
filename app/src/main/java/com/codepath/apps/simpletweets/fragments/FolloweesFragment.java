@@ -2,7 +2,6 @@ package com.codepath.apps.simpletweets.fragments;
 
 import android.os.Bundle;
 
-import com.codepath.apps.simpletweets.models.User;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 /**
@@ -10,28 +9,20 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
  */
 public class FolloweesFragment extends FollowFragment {
 
-  public static FolloweesFragment newInstance(User user) {
+  public static FolloweesFragment newInstance(String screenName) {
     FolloweesFragment followeesFragment = new FolloweesFragment();
     Bundle args = new Bundle();
-    user.resetCursor();
-    args.putSerializable("user", user);
+    args.putString("screen_name", screenName);
     followeesFragment.setArguments(args);
     return followeesFragment;
   }
 
   protected void fetchData(AsyncHttpResponseHandler handler) {
-    User targetUser = (User) getArguments().getSerializable("user");
+    String screenName = getArguments().getString("screen_name");
     client.getFollowees(
-        targetUser,
+        screenName,
         handler
     );
-  }
-
-  @Override
-  protected void setCursor(int nextCursor) {
-    User targetUser = (User) getArguments().getSerializable("user");
-    assert targetUser != null;
-    targetUser.setFolloweesCursor(nextCursor);
   }
 
 }

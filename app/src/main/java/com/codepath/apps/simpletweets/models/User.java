@@ -1,24 +1,16 @@
 package com.codepath.apps.simpletweets.models;
 
-import android.util.Log;
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.codepath.apps.simpletweets.listener.HandleNewObjectsListener;
-import com.codepath.apps.simpletweets.twitter.TwitterApp;
-import com.google.common.base.Joiner;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by xiangyang_xiao on 2/17/16.
@@ -43,25 +35,6 @@ public class User
 
   @Column(name = "followers_count")
   private int followersCount;
-
-  public int getFollowersCursor() {
-    return followersCursor;
-  }
-
-  public int getFolloweesCursor() {
-    return followeesCursor;
-  }
-
-  public void setFollowersCursor(int followersCursor) {
-    this.followersCursor = followersCursor;
-  }
-
-  public void setFolloweesCursor(int followeesCursor) {
-    this.followeesCursor = followeesCursor;
-  }
-
-  private int followersCursor = -1;
-  private int followeesCursor = -1;
 
   public int getFollowersCount() {
     return followersCount;
@@ -107,36 +80,7 @@ public class User
     return null;
   }
 
-  public static void fromUserIds(
-      JSONArray response,
-      final HandleNewObjectsListener listener
-  ) {
-    List<String> ids = new ArrayList<>();
-    for (int i = 0; i < response.length(); i++) {
-      try {
-        ids.add(response.getString(i));
-      } catch (JSONException e) {
-      }
-    }
-
-    TwitterApp.getRestClient().getUsers(
-        Joiner.on(",").join(ids),
-        new JsonHttpResponseHandler() {
-          @Override
-          public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-            ArrayList<User> users = User.fromJsonArray(response);
-            listener.handleNewObjects(users);
-          }
-
-          @Override
-          public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-            Log.d("FailToFetch", errorResponse.toString());
-          }
-        }
-    );
-}
-
-  private static ArrayList<User> fromJsonArray(JSONArray response) {
+  public static ArrayList<User> fromJSONArray(JSONArray response) {
     ArrayList<User> users = new ArrayList<>();
     for(int i=0; i<response.length(); i++) {
       try {
@@ -146,11 +90,6 @@ public class User
       }
     }
     return users;
-  }
-
-  public void resetCursor() {
-    followeesCursor = -1;
-    followeesCursor = -1;
   }
 
   public long getUid() {

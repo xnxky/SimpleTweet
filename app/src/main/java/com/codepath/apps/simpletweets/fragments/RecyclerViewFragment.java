@@ -17,7 +17,6 @@ import com.codepath.apps.simpletweets.R;
 import com.codepath.apps.simpletweets.adapter.RecyclerViewAdapter;
 import com.codepath.apps.simpletweets.listener.ActionBarListener;
 import com.codepath.apps.simpletweets.listener.EndlessRecyclerViewScrollListener;
-import com.codepath.apps.simpletweets.listener.HandleNewObjectsListener;
 import com.codepath.apps.simpletweets.twitter.TwitterApp;
 import com.codepath.apps.simpletweets.twitter.TwitterClient;
 import com.codepath.apps.simpletweets.util.NetworkCheck;
@@ -41,6 +40,8 @@ import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
  */
 public abstract class RecyclerViewFragment<T> extends Fragment {
 
+  protected static ActionBarListener actionBarListener;
+
   @Bind(R.id.recyclerView)
   RecyclerView recyclerView;
   @Bind(R.id.srlContainer)
@@ -59,8 +60,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
   protected ArrayList<T> objects;
   protected RecyclerViewAdapter rcAdapter;
   protected AsyncHttpResponseHandler responseHandler;
-  protected ActionBarListener actionBarListener;
-  protected HandleNewObjectsListener<T> handleNewObjectsListener;
   protected boolean useHandleNewListener;
 
   @Override
@@ -72,46 +71,45 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
   }
 
   protected void setResponseHandler() {
+    final RecyclerViewFragment curFragment = this;
     responseHandler = new JsonHttpResponseHandler() {
       @Override
       public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-        if (actionBarListener != null) {
-          actionBarListener.onSuccess();
-        }
-        List<T> newObjects = getObjectsFromJsonArray(response);
-        if(! useHandleNewListener) {
-          handleNewObjects(newObjects);
-        }
+        curFragment.onSuccess(statusCode, headers, response);
       }
 
       @Override
       public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-        if (actionBarListener != null) {
-          actionBarListener.onSuccess();
-        }
-        List<T> newObjects = getObjectsFromJsonObject(response);
-        if(! useHandleNewListener) {
-          handleNewObjects(newObjects);
-        }
+        curFragment.onSuccess(statusCode, headers, response);
       }
 
       @Override
       public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-        if (actionBarListener != null) {
-          actionBarListener.onFailure();
-        }
-        Log.d("FailToFetch", errorResponse.toString());
-        Toast.makeText(getActivity(), "fail to fetch data; use local data instead", Toast.LENGTH_SHORT).show();
-        handleNewObjects(getAllStoredObjects());
+        curFragment.onFailure(statusCode, headers, throwable, errorResponse);
       }
     };
+  }
 
-    handleNewObjectsListener = new HandleNewObjectsListener<T>() {
-      @Override
-      public void handleNewObjects(List<T> objects) {
-        handleNewObjects(objects);
-      }
-    };
+  protected void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+    if (actionBarListener != null) {
+      actionBarListener.onSuccess();
+    }
+    List<T> newObjects = getObjectsFromJsonArray(response);
+    if (!useHandleNewListener) {
+      handleNewObjects(newObjects);
+    }
+  }
+
+  protected void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+  }
+
+  protected void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+    if (actionBarListener != null) {
+      actionBarListener.onFailure();
+    }
+    Log.d("FailToFetch", errorResponse.toString());
+    Toast.makeText(getActivity(), "fail to fetch data; use local data instead", Toast.LENGTH_SHORT).show();
+    handleNewObjects(getAllStoredObjects());
   }
 
   protected void setOnScrollListener() {
@@ -167,8 +165,8 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
     return view;
   }
 
-  public void setActionBarListener(ActionBarListener listener) {
-    this.actionBarListener = listener;
+  public static void setActionBarListener(ActionBarListener listener) {
+    actionBarListener = listener;
   }
 
   public void handleNewObjects(List<T> newObjects) {
@@ -198,10 +196,13 @@ public abstract class RecyclerViewFragment<T> extends Fragment {
   }
 
   protected abstract void fetchData(AsyncHttpResponseHandler handler);
+
   protected abstract List<T> getAllStoredObjects();
+
   protected abstract void setRcAdapater();
-  protected abstract ArrayList<T> getObjectsFromJsonArray(JSONArray response);
-  protected abstract ArrayList<T> getObjectsFromJsonObject(JSONObject response);
+
+  protected abstract List<T> getObjectsFromJsonArray(JSONArray response);
+
   protected abstract int getLayoutId();
 
 }

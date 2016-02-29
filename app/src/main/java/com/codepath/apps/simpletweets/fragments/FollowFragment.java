@@ -12,11 +12,11 @@ import com.codepath.apps.simpletweets.adapter.FollowRecyclerViewAdapter;
 import com.codepath.apps.simpletweets.listener.OnItemClickListener;
 import com.codepath.apps.simpletweets.models.User;
 
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +28,6 @@ public abstract class FollowFragment extends RecyclerViewFragment<User> {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    useHandleNewListener = true;
   }
 
   @Override
@@ -61,24 +60,20 @@ public abstract class FollowFragment extends RecyclerViewFragment<User> {
   }
 
   @Override
-  protected ArrayList<User> getObjectsFromJsonArray(JSONArray response) {
-    return new ArrayList<>();
-  };
-
-  @Override
-  protected ArrayList<User> getObjectsFromJsonObject(JSONObject response) {
-    try {
-      setCursor(response.getInt("next_cursor"));
-      User.fromUserIds(
-          response.getJSONArray("ids"),
-          handleNewObjectsListener
-      );
-    } catch (JSONException e) {
-      Log.e("JSON Follow Error", e.getMessage());
-    }
-    return new ArrayList<>();
+  protected List<User> getObjectsFromJsonArray(JSONArray response) {
+    //should never be here
+    return Collections.emptyList();
   }
 
-  protected abstract void setCursor(int nextCursor);
+  @Override
+  protected void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+    try {
+      handleNewObjects(
+          User.fromJSONArray(response.getJSONArray("users"))
+      );
+    } catch (JSONException e) {
+      Log.e("JSONException", e.getMessage());
+    }
+  }
 
 }
